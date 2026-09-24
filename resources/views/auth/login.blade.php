@@ -24,7 +24,7 @@
                 @csrf
                 <div>
                     <label class="text-sm font-medium text-zinc-300">Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required autofocus class="mt-2 w-full rounded-xl bg-white/[0.06] border border-white/[0.08] px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20" placeholder="admin@afnalink.my.id">
+                    <input type="email" name="email" value="{{ old('email') }}" required autofocus class="mt-2 w-full rounded-xl bg-white/[0.06] border border-white/[0.08] px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20" placeholder="Email">
                 </div>
                 <div>
                     <label class="text-sm font-medium text-zinc-300">Password</label>
