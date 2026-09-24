@@ -82,10 +82,10 @@
     </header>
 
     <!-- Sidebar overlay -->
-    <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"></div>
+    <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 lg:hidden"></div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed left-0 top-0 bottom-0 w-64 bg-[#0d0d14] border-r border-white/[0.06] z-30 -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
+    <aside id="sidebar" class="fixed left-0 top-0 bottom-0 w-64 bg-[#0d0d14] border-r border-white/[0.06] z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
         <div class="p-6 border-b border-white/[0.06]">
             <div class="flex items-center gap-3">
                 <img src="https://ber.afna.link/storage/uploads/logos/company_logo_1768520380.png" class="w-10 h-10 rounded-xl">
@@ -148,7 +148,7 @@
             @endif
         </nav>
 
-        <div class="p-2.5 border-t border-white/[0.06]">
+        <div class="p-2.5 pb-[calc(1rem+env(safe-area-inset-bottom))] lg:pb-2.5 border-t border-white/[0.06]">
             <a href="{{ route('profile.index') }}" class="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-white/[0.06] transition group">
                 <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center text-white font-bold text-[10px] shrink-0">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(explode(' ', auth()->user()->name)[1] ?? '', 0, 1)) }}
@@ -158,7 +158,7 @@
                 </div>
                 <svg class="w-3 h-3 text-zinc-600 group-hover:text-zinc-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
-            <div class="flex items-center gap-1 mt-3">
+            <div class="flex items-center gap-1 mt-3 pb-20 lg:pb-0">
                 <button onclick="document.getElementById('theme-toggle').click()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.06] text-zinc-500 hover:text-zinc-300" title="Toggle Tema">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </button>
