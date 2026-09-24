@@ -61,7 +61,7 @@
     <!-- Mobile top bar -->
     <header class="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#0d0d14] border-b border-white/[0.06] px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <button id="sidebar-toggle" class="p-2 -ml-2 text-zinc-400 hover:text-white">
+            <button id="sidebar-toggle" class="hidden p-2 -ml-2 text-zinc-400 hover:text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div class="flex items-center gap-2">
@@ -86,7 +86,7 @@
     <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 lg:hidden"></div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed left-0 top-0 bottom-0 w-64 bg-[#0d0d14] border-r border-white/[0.06] z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col shadow-2xl">
+    <aside id="sidebar" style="background-color: #0d0d14;" class="fixed left-0 top-0 bottom-0 w-64 bg-[#0d0d14] border-r border-white/[0.06] z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col shadow-2xl">
         <div class="p-6 border-b border-white/[0.06]">
             <div class="flex items-center gap-3">
                 <img src="https://ber.afna.link/storage/uploads/logos/company_logo_1768520380.png" class="w-10 h-10 rounded-xl">
