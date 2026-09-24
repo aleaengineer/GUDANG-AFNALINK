@@ -36,7 +36,8 @@
         .light .bg-white\/\[0\.06\].text-zinc-300, .light span.bg-white\/\[0\.06\] { background: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #334155 !important; }
         .light .bg-white\/\[0\.06\].border-white\/\[0\.06\] { background: #f1f5f9 !important; border-color: #cbd5e1 !important; }
         /* Light mode sidebar & nav fixes */
-        .light #sidebar { background: #ffffff !important; border-color: #e2e8f0 !important; }
+        #sidebar { background-color: #0d0d14 !important; opacity: 1 !important; }
+        .light #sidebar { background: #ffffff !important; background-color: #ffffff !important; border-color: #e2e8f0 !important; opacity: 1 !important; }
         .light #sidebar .border-white\/\[0\.06\] { border-color: #e2e8f0 !important; }
         .light #sidebar .text-zinc-400 { color: #64748b !important; }
         .light #sidebar .text-zinc-500 { color: #94a3b8 !important; }
@@ -85,7 +86,7 @@
     <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 lg:hidden"></div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed left-0 top-0 bottom-0 w-64 bg-[#0d0d14] border-r border-white/[0.06] z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
+    <aside id="sidebar" class="fixed left-0 top-0 bottom-0 w-64 bg-[#0d0d14] border-r border-white/[0.06] z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col shadow-2xl">
         <div class="p-6 border-b border-white/[0.06]">
             <div class="flex items-center gap-3">
                 <img src="https://ber.afna.link/storage/uploads/logos/company_logo_1768520380.png" class="w-10 h-10 rounded-xl">
