@@ -1,0 +1,41 @@
+{
+  "name": "Gudang AFNALINK",
+  "short_name": "Gudang",
+  "description": "Warehouse Management System - AFNALINK",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#08080f",
+  "theme_color": "#22d3ee",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "https://ber.afna.link/storage/uploads/logos/company_logo_1768520380.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://ber.afna.link/storage/uploads/logos/company_logo_1768520380.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Data Barang",
+      "url": "/barang",
+      "description": "Lihat data barang"
+    },
+    {
+      "name": "Barang Masuk",
+      "url": "/barang-masuk/create",
+      "description": "Tambah stok masuk"
+    },
+    {
+      "name": "Pengambilan",
+      "url": "/barang-keluar/create",
+      "description": "Catat pengambilan teknisi"
+    }
+  ]
+}
