@@ -35,15 +35,8 @@
                 </label>
                 <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 py-3.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 transition">Masuk</button>
             </form>
-            <div class="mt-6 rounded-xl bg-white/[0.04] border border-white/[0.06] p-4">
-                <div class="text-xs font-medium text-zinc-400 mb-2">Akun Demo:</div>
-                <div class="space-y-1 text-xs font-mono">
-                    <div class="flex justify-between"><span class="text-zinc-500">Admin</span><span class="text-zinc-300">admin@afnalink.my.id / password</span></div>
-                    <div class="flex justify-between"><span class="text-zinc-500">Operator</span><span class="text-zinc-300">operator@afnalink.my.id / password</span></div>
-                </div>
-            </div>
         </div>
-        <p class="text-center text-xs text-zinc-600 mt-6">© 2026 AFNALINK • Gudang System PWA</p>
+        <p class="text-center text-xs text-zinc-600 mt-6">© 2026 AFNALINK • By Farhan Ale</p>
     </div>
 </body>
 </html>
