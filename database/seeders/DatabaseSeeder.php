@@ -13,9 +13,9 @@ class DatabaseSeeder extends Seeder
     {
         // Admin
         User::create([
-            'name' => 'Admin AFNALINK',
-            'email' => 'admin@afnalink.my.id',
-            'password' => Hash::make('password'),
+            'name' => 'Farhan Ale',
+            'email' => 'farhan@afna.link',
+            'password' => Hash::make('Bangale72!'),
             'jabatan' => 'CEO',
             'role' => 'admin',
         ]);
