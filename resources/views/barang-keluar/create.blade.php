@@ -3,11 +3,11 @@
 @section('page-title', 'Catat Pengambilan')
 @section('page-subtitle', 'Teknisi ambil barang dari gudang')
 @section('content')
-<div class="max-w-xl">
-    <div class="glass rounded-2xl p-6 lg:p-8">
+<div class="max-w-3xl">
+    <div class="glass rounded-2xl p-5 sm:p-6 lg:p-8">
         <div class="mb-6 rounded-xl bg-amber-500/10 border border-amber-500/20 px-4 py-3 flex gap-3">
             <span class="text-amber-400">⚠️</span>
-            <div class="text-xs text-amber-200/80">@if($isTeknisi)Catat barang yang kamu ambil. Stok akan otomatis berkurang. Validasi stok minus aktif.@else Operator mencatat: siapa teknisi, barang apa, jumlah berapa. Stok akan otomatis berkurang. Validasi stok minus aktif.@endif</div>
+            <div class="text-xs text-amber-200/80">@if($isTeknisi)Catat barang yang kamu ambil. Bisa lebih dari 1 barang dalam 1 kali pencatatan. Stok otomatis berkurang dan sistem menolak jika melebihi sisa stok.@else Catat siapa teknisi, barang apa, berapa. Bisa lebih dari 1 barang dalam 1 kali pencatatan. Stok otomatis berkurang.@endif</div>
         </div>
         <form method="POST" action="{{ route('barang-keluar.store') }}" class="space-y-5">
             @csrf
@@ -53,34 +53,129 @@
                 @endif
             </div>
             @endif
+
+            {{-- ===== DAFTAR BARANG (multi) ===== --}}
             <div>
-                <label class="text-sm font-medium text-zinc-300">Barang *</label>
-                <select name="barang_id" required class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">
-                    <option value="" class="bg-[#08080f]">Pilih barang (hanya stok >0)</option>
-                    @foreach($barangs as $b)
-                        <option value="{{ $b->id }}" class="bg-[#08080f]" {{ (request('barang_id')==$b->id || old('barang_id')==$b->id) ? 'selected' : '' }}>{{ $b->nama }} — sisa {{ $b->stok }} {{ $b->satuan }} ({{ $b->kategori }})</option>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="text-sm font-medium text-zinc-300">Barang yang diambil *</label>
+                    <span class="text-xs text-zinc-500"><span id="jumlah-item">1</span> jenis barang</span>
+                </div>
+                <div id="item-list" class="space-y-3">
+                    @php
+                        $oldItems = old('items');
+                        $rows = (is_array($oldItems) && count($oldItems))
+                            ? $oldItems
+                            : [['barang_id' => request('barang_id'), 'jumlah' => 1, 'serial_number' => '', 'keperluan' => '']];
+                    @endphp
+                    @foreach($rows as $i => $row)
+                        @include('barang-keluar._item-row', ['idx' => $i, 'row' => $row])
                     @endforeach
-                </select>
+                </div>
+                <button type="button" id="tambah-item"
+                        class="mt-3 w-full py-3 rounded-xl border border-dashed border-cyan-500/40 bg-cyan-500/[0.06] text-cyan-300 text-sm font-medium hover:bg-cyan-500/10">
+                    + Tambah Barang Lain
+                </button>
+                <div class="text-xs text-zinc-500 mt-2">Semua barang di bawah dicatat dalam <span class="text-zinc-300">1 kali pencatatan</span>.</div>
                 @if($barangs->isEmpty())<div class="text-xs text-amber-400 mt-2">Semua stok habis! Tambah stok masuk dulu.</div>@endif
             </div>
-            <div>
-                <label class="text-sm font-medium text-zinc-300">Jumlah *</label>
-                <input type="number" name="jumlah" value="{{ old('jumlah', 1) }}" required min="1" placeholder="1" class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">
-                <div class="text-xs text-zinc-500 mt-1">Sistem akan tolak jika melebihi sisa stok.</div>
-            </div>
-            <div>
-                <label class="text-sm font-medium text-zinc-300">Serial Number</label>
-                <input type="text" name="serial_number" value="{{ old('serial_number') }}" placeholder="SN-123456 (opsional, untuk router/ONT)" class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none">
-            </div>
-            <div>
-                <label class="text-sm font-medium text-zinc-300">Keperluan</label>
-                <textarea name="keperluan" rows="3" placeholder="Instalasi pelanggan Jl. Mawar No.10, dll..." class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none">{{ old('keperluan') }}</textarea>
-            </div>
-            <div class="flex gap-3 pt-4">
+
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
                 <a href="{{ route('barang-keluar.index') }}" class="flex-1 py-3 rounded-xl glass text-center text-sm text-white">Batal</a>
                 <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-600 text-white text-sm font-semibold">Catat Pengambilan</button>
             </div>
         </form>
     </div>
 </div>
+
+<template id="tpl-item">
+    @include('barang-keluar._item-row', ['idx' => '__INDEX__', 'row' => ['barang_id' => '', 'jumlah' => 1, 'serial_number' => '', 'keperluan' => '']])
+</template>
+
+@push('scripts')
+<script>
+(function () {
+    var list = document.getElementById('item-list');
+    var tpl = document.getElementById('tpl-item');
+    var btnTambah = document.getElementById('tambah-item');
+    var counter = document.getElementById('jumlah-item');
+    var maks = 30;
+
+    if (!list || !tpl || !btnTambah) { console.error('barang-keluar: elemen form tidak ditemukan'); return; }
+
+    function infoSisa(select) {
+        var row = select.closest('[data-item]');
+        if (!row) return;
+        var opt = select.options[select.selectedIndex];
+        var stokEl = row.querySelector('[data-info-stok]');
+        var satEl = row.querySelector('[data-info-satuan]');
+        var jumlah = row.querySelector('[data-jumlah]');
+        if (opt && opt.value && opt.dataset.stok !== undefined) {
+            stokEl.textContent = opt.dataset.stok;
+            satEl.textContent = opt.dataset.satuan || '';
+            var sisa = parseInt(opt.dataset.stok, 10);
+            jumlah.max = sisa > 0 ? sisa : 1;
+            jumlah.classList.toggle('text-red-400', parseInt(jumlah.value || 0, 10) > sisa);
+        } else {
+            stokEl.textContent = '-';
+            satEl.textContent = '';
+            jumlah.removeAttribute('max');
+        }
+    }
+
+    function renumber() {
+        var rows = list.querySelectorAll('[data-item]');
+        rows.forEach(function (row, i) {
+            row.querySelectorAll('input, select').forEach(function (el) {
+                el.name = el.name.replace(/items\[[^\]]*\]/, 'items[' + i + ']');
+            });
+            var no = row.querySelector('[data-no]');
+            if (no) no.textContent = 'BARANG ' + (i + 1);
+            var hapus = row.querySelector('[data-hapus-row]');
+            if (hapus) hapus.style.visibility = rows.length === 1 ? 'hidden' : 'visible';
+        });
+        if (counter) counter.textContent = rows.length;
+        btnTambah.disabled = rows.length >= maks;
+        btnTambah.classList.toggle('opacity-40', rows.length >= maks);
+    }
+
+    function tambahBaris() {
+        if (list.querySelectorAll('[data-item]').length >= maks) return;
+        var html = tpl.innerHTML.replace(/__INDEX__/g, String(list.querySelectorAll('[data-item]').length + 1));
+        var wrap = document.createElement('div');
+        wrap.innerHTML = html;
+        var row = wrap.firstElementChild;
+        if (!row) { console.error('barang-keluar: template baris tidak valid'); return; }
+        list.appendChild(row);
+        renumber();
+        var sel = row.querySelector('select[name$="[barang_id]"]');
+        if (sel) sel.focus();
+    }
+
+    list.addEventListener('change', function (e) {
+        if (e.target.matches('select[name$="[barang_id]"]')) infoSisa(e.target);
+    });
+    list.addEventListener('input', function (e) {
+        if (e.target.matches('input[name$="[jumlah]"]')) {
+            var sel = e.target.closest('[data-item]').querySelector('select[name$="[barang_id]"]');
+            if (sel) infoSisa(sel);
+        }
+    });
+    list.addEventListener('click', function (e) {
+        var h = e.target.closest('[data-hapus-row]');
+        if (!h) return;
+        if (list.querySelectorAll('[data-item]').length <= 1) return;
+        h.closest('[data-item]').remove();
+        renumber();
+    });
+
+    btnTambah.addEventListener('click', tambahBaris);
+
+    list.querySelectorAll('[data-item]').forEach(function (row) {
+        var sel = row.querySelector('select[name$="[barang_id]"]');
+        if (sel) infoSisa(sel);
+    });
+    renumber();
+})();
+</script>
+@endpush
 @endsection
