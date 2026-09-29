@@ -38,6 +38,7 @@
                     <label class="text-sm font-medium text-zinc-300">Role *</label>
                     <select name="role" required class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">
                         <option value="operator" class="bg-[#08080f]" {{ old('role', $user->role)=='operator' ? 'selected' : '' }}>Operator</option>
+                        <option value="teknisi" class="bg-[#08080f]" {{ old('role', $user->role)=='teknisi' ? 'selected' : '' }}>Teknisi</option>
                         <option value="admin" class="bg-[#08080f]" {{ old('role', $user->role)=='admin' ? 'selected' : '' }}>Admin</option>
                     </select>
                 </div>

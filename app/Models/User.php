@@ -10,6 +10,7 @@ class User extends Authenticatable {
     protected function casts(): array { return ['email_verified_at'=>'datetime','password'=>'hashed']; }
     public function isAdmin(): bool { return $this->role === 'admin'; }
     public function isOperator(): bool { return $this->role === 'operator'; }
+    public function isTeknisi(): bool { return $this->role === 'teknisi'; }
     public function barangMasuks(){ return $this->hasMany(BarangMasuk::class,'operator_id'); }
     public function barangKeluars(){ return $this->hasMany(BarangKeluar::class,'operator_id'); }
     public function auditLogs(){ return $this->hasMany(AuditLog::class); }

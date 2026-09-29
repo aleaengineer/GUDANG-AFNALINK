@@ -7,10 +7,24 @@
     <div class="glass rounded-2xl p-6 lg:p-8">
         <div class="mb-6 rounded-xl bg-amber-500/10 border border-amber-500/20 px-4 py-3 flex gap-3">
             <span class="text-amber-400">⚠️</span>
-            <div class="text-xs text-amber-200/80">Operator mencatat: siapa teknisi, barang apa, jumlah berapa. Stok akan otomatis berkurang. Validasi stok minus aktif.</div>
+            <div class="text-xs text-amber-200/80">@if($isTeknisi)Catat barang yang kamu ambil. Stok akan otomatis berkurang. Validasi stok minus aktif.@else Operator mencatat: siapa teknisi, barang apa, jumlah berapa. Stok akan otomatis berkurang. Validasi stok minus aktif.@endif</div>
         </div>
         <form method="POST" action="{{ route('barang-keluar.store') }}" class="space-y-5">
             @csrf
+            @if($isTeknisi)
+            <div class="rounded-xl bg-cyan-500/10 border border-cyan-500/20 px-4 py-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-sm font-bold text-cyan-300 shrink-0">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
+                    <div class="min-w-0">
+                        <div class="text-sm font-semibold text-white truncate">{{ auth()->user()->name }}</div>
+                        <div class="text-xs text-cyan-300/80">{{ auth()->user()->jabatan }} • {{ auth()->user()->email }}</div>
+                    </div>
+                </div>
+                <input type="hidden" name="teknisi_nama" value="{{ auth()->user()->name }}">
+                <input type="hidden" name="teknisi_jabatan" value="{{ auth()->user()->jabatan }}">
+                <div class="text-[11px] text-cyan-200/60 mt-2">Nama & jabatan diambil otomatis dari akun kamu dan tidak bisa diubah.</div>
+            </div>
+            @else
             <div>
                 <label class="text-sm font-medium text-zinc-300">Jabatan *</label>
                 <select name="teknisi_jabatan" required onchange="window.location.href='{{ route('barang-keluar.create') }}?jabatan='+this.value" class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">
@@ -38,6 +52,7 @@
                     <div class="text-xs text-amber-400 mt-1">Belum ada data pegawai untuk jabatan ini. <a href="{{ route('pegawai.create') }}" class="text-cyan-400 hover:underline">+ Tambah pegawai</a> dulu di <a href="{{ route('pegawai.index') }}" class="text-cyan-400 hover:underline">Data Pegawai</a>.</div>
                 @endif
             </div>
+            @endif
             <div>
                 <label class="text-sm font-medium text-zinc-300">Barang *</label>
                 <select name="barang_id" required class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">

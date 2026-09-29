@@ -5,7 +5,9 @@
 @section('content')
 <div class="flex flex-wrap gap-3 mb-6">
     <a href="{{ route('barang-keluar.create') }}" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-600 text-white text-sm font-medium">+ Catat Pengambilan</a>
+    @if(!auth()->user()->isTeknisi())
     <a href="{{ route('laporan.export') }}" class="px-5 py-3 rounded-xl glass text-sm text-white">📥 Export Laporan</a>
+    @endif
 </div>
 <div class="glass rounded-2xl overflow-hidden">
     <div class="overflow-x-auto">
@@ -19,12 +21,16 @@
                     <td class="px-5 py-4"><span class="text-sm font-bold text-red-400">-{{ $k->jumlah }} {{ $k->barang->satuan ?? 'pcs' }}</span></td>
                     <td class="px-5 py-4"><div class="text-sm font-medium text-white">{{ $k->teknisi_nama }}</div><div class="text-xs px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.06] inline-block mt-1">{{ $k->teknisi_jabatan }}</div></td>
                     <td class="px-5 py-4 hidden lg:table-cell text-sm text-zinc-400 max-w-[200px] truncate">{{ $k->keperluan ?? '-' }}</td>
-                    <td class="px-5 py-4 text-sm text-zinc-400">{{ $k->operator->name ?? '-' }}</td>
+                    <td class="px-5 py-4 text-sm text-zinc-400">@if($k->taken_by && $k->taken_by === $k->operator_id)<span class="text-zinc-500">Mandiri</span>@else{{ $k->operator->name ?? '-' }}@endif</td>
                     <td class="px-5 py-4 text-right">
+                        @if(!auth()->user()->isTeknisi())
                         <form method="POST" action="{{ route('barang-keluar.destroy', $k) }}" onsubmit="return confirm('Hapus & kembalikan stok?')" class="inline">
                             @csrf @method('DELETE')
                             <button type="submit" class="p-2 rounded-lg hover:bg-red-500/10 text-zinc-400 hover:text-red-400">🗑️</button>
                         </form>
+                        @else
+                        <span class="text-xs text-zinc-600">—</span>
+                        @endif
                     </td>
                 </tr>
                 @empty

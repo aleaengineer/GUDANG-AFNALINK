@@ -4,9 +4,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 class RoleMiddleware {
-    public function handle(Request $request, Closure $next, string $role): Response {
+    public function handle(Request $request, Closure $next, string ...$roles): Response {
         if (!auth()->check()) return redirect()->route('login');
-        if (auth()->user()->role !== $role) abort(403, 'Akses ditolak');
+        if (!in_array(auth()->user()->role, $roles, true)) abort(403, 'Akses ditolak');
         return $next($request);
     }
 }

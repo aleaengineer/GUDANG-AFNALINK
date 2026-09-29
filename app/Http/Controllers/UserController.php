@@ -19,7 +19,7 @@ class UserController extends Controller {
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|confirmed',
             'jabatan'=>'required|in:Teknisi,NOC,Marketing,Kasir,CEO,CFO,CMO,Finance',
-            'role'=>'required|in:admin,operator',
+            'role'=>'required|in:admin,operator,teknisi',
         ]);
         $data['password']=Hash::make($data['password']);
         $user=User::create($data);
@@ -36,7 +36,7 @@ class UserController extends Controller {
             'email'=>'required|email|unique:users,email,'.$user->id,
             'password'=>'nullable|min:6|confirmed',
             'jabatan'=>'required|in:Teknisi,NOC,Marketing,Kasir,CEO,CFO,CMO,Finance',
-            'role'=>'required|in:admin,operator',
+            'role'=>'required|in:admin,operator,teknisi',
         ]);
         if($data['password']) $data['password']=Hash::make($data['password']); else unset($data['password']);
         $user->update($data);

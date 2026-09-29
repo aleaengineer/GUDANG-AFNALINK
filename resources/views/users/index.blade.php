@@ -17,7 +17,7 @@
                     <td class="px-5 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">{{ strtoupper(substr($u->name,0,1)) }}{{ strtoupper(substr(explode(' ',$u->name)[1]??'',0,1)) }}</div><div class="text-sm font-medium text-white">{{ $u->name }}</div></div></td>
                     <td class="px-5 py-4 text-sm text-zinc-400">{{ $u->email }}</td>
                     <td class="px-5 py-4"><span class="text-xs px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/[0.06] text-zinc-300">{{ $u->jabatan }}</span></td>
-                    <td class="px-5 py-4"><span class="text-xs px-2.5 py-1 rounded-full {{ $u->role=='admin' ? 'bg-amber-500/10 border-amber-500/20 text-amber-300' : 'bg-cyan-500/10 border-cyan-500/20 text-cyan-300' }}">{{ ucfirst($u->role) }}</span></td>
+                    <td class="px-5 py-4"><span class="text-xs px-2.5 py-1 rounded-full {{ $u->role=='admin' ? 'bg-amber-500/10 border-amber-500/20 text-amber-300' : ($u->role=='teknisi' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300' : 'bg-cyan-500/10 border-cyan-500/20 text-cyan-300') }}">{{ ucfirst($u->role) }}</span></td>
                     <td class="px-5 py-4 text-right">
                         <a href="{{ route('users.edit', $u) }}" class="p-2 rounded-lg hover:bg-white/[0.06] text-zinc-400 hover:text-white">✏️</a>
                         @if($u->id !== auth()->id())

@@ -6,6 +6,14 @@ use App\Models\BarangKeluar;
 use Illuminate\Http\Request;
 class DashboardController extends Controller {
     public function index(){
+        if(auth()->user()->isTeknisi()){
+            $totalJenis=Barang::count();
+            $totalStok=Barang::sum('stok');
+            $barangs=Barang::where('stok','>',0)->orderBy('nama')->get();
+            $totalAmbilSaya=BarangKeluar::where('taken_by',auth()->id())->count();
+            $riwayatSaya=BarangKeluar::with(['barang'])->where('taken_by',auth()->id())->latest()->take(10)->get();
+            return view('dashboard.teknisi', compact('totalJenis','totalStok','barangs','totalAmbilSaya','riwayatSaya'));
+        }
         $totalBarang = Barang::count();
         $totalStok = Barang::sum('stok');
         $lowStock = Barang::where('stok','<=',5)->count();
