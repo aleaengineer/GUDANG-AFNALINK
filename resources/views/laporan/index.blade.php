@@ -22,6 +22,11 @@
     .flatpickr-input::placeholder { color: #71717a !important; }
     .flatpickr-input:focus { border-color: rgba(34,211,238,0.5) !important; outline: none !important; }
     .light .flatpickr-input { background: #ffffff !important; border-color: #e2e8f0 !important; color: #1e293b !important; }
+    @media (max-width: 640px) {
+        /* cukup batasi lebar, JANGAN paksa width:100% — itu membuat flatpickr
+           membaca cssRules stylesheet CDN & melempar SecurityError */
+        .flatpickr-calendar { max-width: calc(100vw - 16px) !important; }
+    }
 </style>
 @endpush
 
@@ -30,33 +35,33 @@
 @section('page-title', 'Laporan')
 @section('page-subtitle', 'Riwayat & audit log')
 @section('content')
-<div class="glass rounded-2xl p-5 mb-6">
-    <form method="GET" class="flex flex-wrap gap-3 items-end">
-        <div class="relative">
+<div class="glass rounded-2xl p-4 sm:p-5 mb-6">
+    <form method="GET" class="flex flex-col sm:flex-wrap sm:flex-row gap-3 sm:items-end">
+        <div class="relative w-full sm:w-auto">
             <label class="text-xs font-medium text-zinc-400">Per Bulan</label>
             <div class="relative mt-1">
-                <input type="text" id="bulan-picker" name="bulan" value="{{ request('bulan') }}" placeholder="Pilih Bulan" readonly class="w-[160px] rounded-xl bg-[#08080f] border border-white/[0.08] pl-11 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 text-center focus:border-cyan-500/50 focus:outline-none cursor-pointer">
+                <input type="text" id="bulan-picker" name="bulan" value="{{ request('bulan') }}" placeholder="Pilih Bulan" readonly class="w-full sm:w-[160px] rounded-xl bg-[#08080f] border border-white/[0.08] pl-11 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 text-center focus:border-cyan-500/50 focus:outline-none cursor-pointer">
                 <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
         </div>
-        <div class="relative">
+        <div class="relative w-full sm:w-auto">
             <label class="text-xs font-medium text-zinc-400">Dari Tanggal</label>
             <div class="relative mt-1">
-                <input type="text" id="from-picker" name="from" value="{{ request('from') }}" placeholder="Pilih Tanggal" readonly class="w-[160px] rounded-xl bg-[#08080f] border border-white/[0.08] pl-11 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 text-center focus:border-cyan-500/50 focus:outline-none cursor-pointer">
+                <input type="text" id="from-picker" name="from" value="{{ request('from') }}" placeholder="Pilih Tanggal" readonly class="w-full sm:w-[160px] rounded-xl bg-[#08080f] border border-white/[0.08] pl-11 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 text-center focus:border-cyan-500/50 focus:outline-none cursor-pointer">
                 <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
         </div>
-        <div class="relative">
+        <div class="relative w-full sm:w-auto">
             <label class="text-xs font-medium text-zinc-400">Sampai Tanggal</label>
             <div class="relative mt-1">
-                <input type="text" id="to-picker" name="to" value="{{ request('to') }}" placeholder="Pilih Tanggal" readonly class="w-[160px] rounded-xl bg-[#08080f] border border-white/[0.08] pl-11 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 text-center focus:border-cyan-500/50 focus:outline-none cursor-pointer">
+                <input type="text" id="to-picker" name="to" value="{{ request('to') }}" placeholder="Pilih Tanggal" readonly class="w-full sm:w-[160px] rounded-xl bg-[#08080f] border border-white/[0.08] pl-11 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 text-center focus:border-cyan-500/50 focus:outline-none cursor-pointer">
                 <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
         </div>
-        <div class="flex gap-2 ml-auto self-end">
-            <button type="submit" class="px-6 py-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm text-white hover:bg-white/[0.08] h-[42px]">Filter</button>
-            <a href="{{ route('laporan.index') }}" class="px-6 py-2.5 rounded-xl glass text-sm text-white hover:bg-white/[0.06] h-[42px] flex items-center">Reset</a>
-            <a href="{{ route('laporan.export', request()->only(['from','to','bulan'])) }}" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-white text-sm font-medium h-[42px] flex items-center">📥 Export</a>
+        <div class="flex flex-wrap gap-2 self-end w-full sm:w-auto sm:ml-auto">
+            <button type="submit" class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm text-white hover:bg-white/[0.08] h-[42px] whitespace-nowrap">Filter</button>
+            <a href="{{ route('laporan.index') }}" class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl glass text-sm text-white hover:bg-white/[0.06] h-[42px] flex items-center justify-center whitespace-nowrap">Reset</a>
+            <a href="{{ route('laporan.export', request()->only(['from','to','bulan'])) }}" class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-white text-sm font-medium h-[42px] flex items-center justify-center whitespace-nowrap">📥 Export</a>
         </div>
     </form>
     @if(request('bulan'))
@@ -65,30 +70,30 @@
 </div>
 
 <div class="grid lg:grid-cols-2 gap-6 mb-6">
-    <div class="glass rounded-2xl p-5">
+    <div class="glass rounded-2xl p-4 sm:p-5 min-w-0">
         <h3 class="font-semibold text-white mb-4">Ringkasan Periode</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4">
+        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+            <div class="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4 min-w-0">
                 <div class="text-2xl font-bold text-emerald-400">{{ $masuks->count() }}</div>
                 <div class="text-xs text-zinc-500">Barang Masuk</div>
                 <div class="text-xs text-zinc-600">Total {{ $masuks->sum('jumlah') }} unit</div>
             </div>
-            <div class="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
+            <div class="rounded-xl bg-red-500/10 border border-red-500/20 p-4 min-w-0">
                 <div class="text-2xl font-bold text-red-400">{{ $keluars->count() }}</div>
                 <div class="text-xs text-zinc-500">Pengambilan</div>
                 <div class="text-xs text-zinc-600">Total {{ $keluars->sum('jumlah') }} unit</div>
             </div>
         </div>
     </div>
-    <div class="glass rounded-2xl p-5">
+    <div class="glass rounded-2xl p-4 sm:p-5 min-w-0">
         <h3 class="font-semibold text-white mb-4">Audit Log Terbaru</h3>
         <div class="space-y-2 max-h-[200px] overflow-auto">
             @forelse($logs->take(8) as $log)
-            <div class="flex gap-3 text-xs border-b border-white/[0.04] pb-2">
-                <span class="text-zinc-500 whitespace-nowrap">{{ $log->created_at->format('d/m H:i') }}</span>
-                <span class="px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 text-[10px]">{{ $log->aksi }}</span>
-                <span class="text-zinc-400 flex-1 truncate">{{ $log->deskripsi }}</span>
-                <span class="text-zinc-500">{{ $log->user->name ?? '-' }}</span>
+            <div class="flex gap-2 sm:gap-3 text-xs border-b border-white/[0.04] pb-2 min-w-0">
+                <span class="text-zinc-500 whitespace-nowrap shrink-0">{{ $log->created_at->format('d/m H:i') }}</span>
+                <span class="px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 text-[10px] whitespace-nowrap shrink-0">{{ $log->aksi }}</span>
+                <span class="text-zinc-400 flex-1 min-w-0 truncate">{{ $log->deskripsi }}</span>
+                <span class="text-zinc-500 whitespace-nowrap shrink-0 hidden sm:inline">{{ $log->user->name ?? '-' }}</span>
             </div>
             @empty
             <div class="text-center py-8 text-zinc-500 text-sm">Belum ada log</div>
@@ -98,34 +103,34 @@
 </div>
 
 <div class="glass rounded-2xl overflow-hidden mb-6">
-    <div class="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
+    <div class="px-3 sm:px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
         <h3 class="font-semibold text-white">Riwayat Barang Keluar Masuk</h3>
         <span class="text-xs text-zinc-500">{{ $masuks->count() + $keluars->count() }} transaksi</span>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full">
-            <thead><tr class="border-b border-white/[0.06] bg-white/[0.02]"><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">TANGGAL</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">BARANG</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">JUMLAH</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">TIPE</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">DIAMBIL OLEH / SUMBER</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">OPERATOR</th></tr></thead>
+            <thead><tr class="border-b border-white/[0.06] bg-white/[0.02]"><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">TANGGAL</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">BARANG</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">JUMLAH</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">TIPE</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">DIAMBIL OLEH / SUMBER</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">OPERATOR</th></tr></thead>
             <tbody class="divide-y divide-white/[0.04]">
                 @php
                     $riwayat = collect()->merge($masuks->map(fn($m) => ['waktu'=>$m->created_at,'tipe'=>'MASUK','barang'=>$m->barang,'jumlah'=>$m->jumlah,'satuan'=>$m->barang->satuan ?? 'pcs','sumber'=>$m->sumber,'teknisi'=>null,'jabatan'=>null,'operator'=>$m->operator]))->merge($keluars->map(fn($k) => ['waktu'=>$k->created_at,'tipe'=>'KELUAR','barang'=>$k->barang,'jumlah'=>$k->jumlah,'satuan'=>$k->barang->satuan ?? 'pcs','sumber'=>null,'teknisi'=>$k->teknisi_nama,'jabatan'=>$k->teknisi_jabatan,'operator'=>$k->operator]))->sortByDesc('waktu');
                 @endphp
                 @forelse($riwayat as $r)
                 <tr class="hover:bg-white/[0.03]">
-                    <td class="px-5 py-3 text-sm text-zinc-400 whitespace-nowrap">{{ $r['waktu']->format('d/m/Y H:i') }}</td>
-                    <td class="px-5 py-3"><div class="text-sm font-medium text-white">{{ $r['barang']->nama ?? '-' }}</div><div class="text-xs text-zinc-500">{{ $r['barang']->kategori ?? '-' }}</div></td>
-                    <td class="px-5 py-3"><span class="text-sm font-bold {{ $r['tipe']=='MASUK' ? 'text-emerald-400' : 'text-red-400' }}">{{ $r['tipe']=='MASUK' ? '+' : '-' }}{{ $r['jumlah'] }} {{ $r['satuan'] }}</span></td>
-                    <td class="px-5 py-3"><span class="text-xs px-2.5 py-1 rounded-full border {{ $r['tipe']=='MASUK' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-red-500/10 border-red-500/20 text-red-300' }}">{{ $r['tipe'] }}</span></td>
-                    <td class="px-5 py-3">
+                    <td class="px-3 sm:px-5 py-3 text-sm text-zinc-400 whitespace-nowrap">{{ $r['waktu']->format('d/m/Y H:i') }}</td>
+                    <td class="px-3 sm:px-5 py-3"><div class="text-sm font-medium text-white">{{ $r['barang']->nama ?? '-' }}</div><div class="text-xs text-zinc-500">{{ $r['barang']->kategori ?? '-' }}</div></td>
+                    <td class="px-3 sm:px-5 py-3"><span class="text-sm font-bold {{ $r['tipe']=='MASUK' ? 'text-emerald-400' : 'text-red-400' }}">{{ $r['tipe']=='MASUK' ? '+' : '-' }}{{ $r['jumlah'] }} {{ $r['satuan'] }}</span></td>
+                    <td class="px-3 sm:px-5 py-3"><span class="text-xs px-2.5 py-1 rounded-full border {{ $r['tipe']=='MASUK' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-red-500/10 border-red-500/20 text-red-300' }}">{{ $r['tipe'] }}</span></td>
+                    <td class="px-3 sm:px-5 py-3">
                         @if($r['tipe']=='KELUAR')
                             <div class="text-sm font-medium text-white">{{ $r['teknisi'] }}</div><div class="text-xs"><span class="px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/[0.06] text-zinc-400 text-[11px]">{{ $r['jabatan'] }}</span></div>
                         @else
                             <div class="text-sm text-zinc-300">{{ $r['sumber'] ?? '-' }}</div>
                         @endif
                     </td>
-                    <td class="px-5 py-3 text-sm text-zinc-400">{{ $r['operator']->name ?? '-' }}</td>
+                    <td class="px-3 sm:px-5 py-3 text-sm text-zinc-400">{{ $r['operator']->name ?? '-' }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="px-5 py-16 text-center text-zinc-500">Belum ada transaksi</td></tr>
+                <tr><td colspan="6" class="px-3 sm:px-5 py-16 text-center text-zinc-500">Belum ada transaksi</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -133,27 +138,27 @@
 </div>
 
 <div class="glass rounded-2xl overflow-hidden">
-    <div class="px-5 py-4 border-b border-white/[0.06]">
+    <div class="px-3 sm:px-5 py-4 border-b border-white/[0.06]">
         <h3 class="font-semibold text-white">Audit Log Lengkap</h3>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full">
-            <thead><tr class="border-b border-white/[0.06] bg-white/[0.02]"><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">WAKTU</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">USER</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">AKSI</th><th class="text-left px-5 py-3 text-xs font-semibold text-zinc-400">DESKRIPSI</th></tr></thead>
+            <thead><tr class="border-b border-white/[0.06] bg-white/[0.02]"><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">WAKTU</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">USER</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">AKSI</th><th class="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-zinc-400">DESKRIPSI</th></tr></thead>
             <tbody class="divide-y divide-white/[0.04]">
                 @forelse($logs as $log)
                 <tr class="hover:bg-white/[0.03]">
-                    <td class="px-5 py-3 text-sm text-zinc-400 whitespace-nowrap">{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
-                    <td class="px-5 py-3 text-sm text-white">{{ $log->user->name ?? '-' }}</td>
-                    <td class="px-5 py-3"><span class="text-xs px-2 py-1 rounded-full bg-white/[0.06] border border-white/[0.06] text-zinc-300">{{ $log->aksi }}</span></td>
-                    <td class="px-5 py-3 text-sm text-zinc-400">{{ $log->deskripsi }}</td>
+                    <td class="px-3 sm:px-5 py-3 text-sm text-zinc-400 whitespace-nowrap">{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
+                    <td class="px-3 sm:px-5 py-3 text-sm text-white">{{ $log->user->name ?? '-' }}</td>
+                    <td class="px-3 sm:px-5 py-3"><span class="text-xs px-2 py-1 rounded-full bg-white/[0.06] border border-white/[0.06] text-zinc-300">{{ $log->aksi }}</span></td>
+                    <td class="px-3 sm:px-5 py-3 text-sm text-zinc-400">{{ $log->deskripsi }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="4" class="px-5 py-16 text-center text-zinc-500">Belum ada log</td></tr>
+                <tr><td colspan="4" class="px-3 sm:px-5 py-16 text-center text-zinc-500">Belum ada log</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-    @if($logs->hasPages())<div class="px-5 py-4 border-t border-white/[0.06]">{{ $logs->links() }}</div>@endif
+    @if($logs->hasPages())<div class="px-3 sm:px-5 py-4 border-t border-white/[0.06]">{{ $logs->links() }}</div>@endif
 </div>
 
 @push('scripts')
