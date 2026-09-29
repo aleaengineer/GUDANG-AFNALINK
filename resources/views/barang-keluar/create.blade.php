@@ -27,7 +27,7 @@
             @else
             <div>
                 <label class="text-sm font-medium text-zinc-300">Jabatan *</label>
-                <select name="teknisi_jabatan" required onchange="window.location.href='{{ route('barang-keluar.create') }}?jabatan='+this.value" class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">
+                <select name="teknisi_jabatan" id="select-jabatan" required class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">
                     @foreach($jabatans as $j)
                         <option value="{{ $j }}" class="bg-[#08080f]" {{ old('teknisi_jabatan', request('jabatan'))==$j ? 'selected' : '' }}>{{ $j }}</option>
                     @endforeach
@@ -40,10 +40,11 @@
                     <select name="teknisi_nama" id="select-nama" required class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white focus:outline-none">
                         <option value="" class="bg-[#08080f]">Pilih nama</option>
                         @foreach($karyawans as $k)
-                            <option value="{{ $k->nama }}" class="bg-[#08080f]" {{ old('teknisi_nama')==$k->nama ? 'selected' : '' }}>{{ $k->nama }} — {{ $k->jabatan }}</option>
+                            <option value="{{ $k->nama }}" data-jabatan="{{ $k->jabatan }}" class="bg-[#08080f]" {{ old('teknisi_nama')==$k->nama ? 'selected' : '' }}>{{ $k->nama }} — {{ $k->jabatan }}</option>
                         @endforeach
                     </select>
-                    <div class="text-xs text-zinc-500 mt-1">List dari <a href="{{ route('pegawai.index') }}" class="text-cyan-400 hover:underline">Data Pegawai</a> ({{ $karyawans->count() }} orang). <span class="text-zinc-600">Atau</span> <a href="#" onclick="const w=document.getElementById('manual-nama-wrap'); w.classList.toggle('hidden'); const s=document.getElementById('select-nama'); const m=document.getElementById('manual-nama'); if(!w.classList.contains('hidden')){m.name='teknisi_nama'; m.required=true; s.removeAttribute('name'); s.required=false;}else{m.removeAttribute('name'); m.required=false; s.name='teknisi_nama'; s.required=true;} return false;" class="text-cyan-400 hover:underline">input manual</a></div>
+                    <div id="nama-tak-ada" class="hidden text-xs text-amber-400 mt-1">Belum ada pegawai aktif untuk jabatan ini. <a href="{{ route('pegawai.create') }}" class="text-cyan-400 hover:underline">+ Tambah pegawai</a> dulu, atau pakai input manual di bawah.</div>
+                    <div class="text-xs text-zinc-500 mt-1">List dari <a href="{{ route('pegawai.index') }}" class="text-cyan-400 hover:underline">Data Pegawai</a> ({{ $karyawans->count() }} personil aktif). <span class="text-zinc-600">Atau</span> <a href="#" onclick="const w=document.getElementById('manual-nama-wrap'); w.classList.toggle('hidden'); const s=document.getElementById('select-nama'); const m=document.getElementById('manual-nama'); if(!w.classList.contains('hidden')){m.name='teknisi_nama'; m.required=true; s.removeAttribute('name'); s.required=false;}else{m.removeAttribute('name'); m.required=false; s.name='teknisi_nama'; s.required=true;} return false;" class="text-cyan-400 hover:underline">input manual</a></div>
                     <div id="manual-nama-wrap" class="hidden">
                         <input type="text" id="manual-nama" placeholder="Budi Santoso (manual jika tidak ada di list)" class="mt-2 w-full rounded-xl bg-[#08080f] border border-white/[0.08] px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none">
                     </div>
@@ -169,6 +170,28 @@
     });
 
     btnTambah.addEventListener('click', tambahBaris);
+
+    // Filter nama personil sesuai jabatan tanpa reload halaman,
+    // supaya baris barang yang sudah diisi tidak hilang saat ganti jabatan.
+    var selJabatan = document.getElementById('select-jabatan');
+    var selNama = document.getElementById('select-nama');
+    var hintNama = document.getElementById('nama-tak-ada');
+    function filterNama() {
+        if (!selJabatan || !selNama) return;
+        var jab = selJabatan.value, ada = false;
+        Array.prototype.forEach.call(selNama.options, function (opt) {
+            if (!opt.value) return;
+            var tampil = opt.getAttribute('data-jabatan') === jab;
+            opt.hidden = !tampil;
+            if (tampil) ada = true;
+        });
+        if (selNama.value && selNama.selectedOptions[0] && selNama.selectedOptions[0].hidden) selNama.value = '';
+        if (hintNama) hintNama.classList.toggle('hidden', ada);
+    }
+    if (selJabatan && selNama) {
+        selJabatan.addEventListener('change', filterNama);
+        filterNama();
+    }
 
     list.querySelectorAll('[data-item]').forEach(function (row) {
         var sel = row.querySelector('select[name$="[barang_id]"]');
