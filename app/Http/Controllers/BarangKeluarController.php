@@ -59,6 +59,9 @@ class BarangKeluarController extends Controller {
         foreach($items as $it) $total[$it['barang_id']]=($total[$it['barang_id']]??0)+(int)$it['jumlah'];
         foreach($total as $barangId=>$qty){
             $b=Barang::find($barangId);
+            if(!$b){
+                return back()->withErrors(['items'=>'Satu barang tidak ditemukan (mungkin baru dihapus). Muat ulang halaman lalu coba lagi.'])->withInput();
+            }
             if($qty > $b->stok){
                 return back()->withErrors(['items'=>"Stok tidak cukup untuk \"{$b->nama}\"! Diminta {$qty}, sisa stok {$b->stok} {$b->satuan}."])->withInput();
             }

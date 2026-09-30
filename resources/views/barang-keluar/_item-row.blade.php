@@ -1,6 +1,7 @@
 @php
     // $idx = indeks angka, atau string '__INDEX__' saat dipakai di dalam <template>
     $sel = old('items.'.$idx.'.barang_id', $row['barang_id'] ?? null);
+    $selBarang = $sel ? $barangs->firstWhere('id', (int) $sel) : null;
 @endphp
 <div class="item-row glass rounded-xl p-4" data-item>
     <div class="flex items-center justify-between gap-2 mb-3">
@@ -13,13 +14,14 @@
     <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
         <div class="sm:col-span-7">
             <label class="text-sm font-medium text-zinc-300">Barang *</label>
-            <select name="items[{{ $idx }}][barang_id]" required
-                    class="mt-2 w-full min-w-0 rounded-xl bg-[#08080f] border border-white/[0.08] px-3 py-3 text-sm text-white focus:outline-none">
-                <option value="" class="bg-[#08080f]">Pilih barang...</option>
-                @foreach($barangs as $b)
-                    <option value="{{ $b->id }}" class="bg-[#08080f]" data-stok="{{ $b->stok }}" data-satuan="{{ $b->satuan }}" {{ (string)$sel === (string)$b->id ? 'selected' : '' }}>{{ $b->nama }} — {{ $b->kategori }} (sisa {{ $b->stok }} {{ $b->satuan }})</option>
-                @endforeach
-            </select>
+            <div class="relative mt-2">
+                {{-- id barang yang benar-benar dikirim ke server diisi saat barang dipilih dari saran --}}
+                <input type="hidden" name="items[{{ $idx }}][barang_id]" value="{{ $selBarang->id ?? '' }}" data-barang-id>
+                <input type="text" data-ac-input value="{{ $selBarang->nama ?? '' }}" placeholder="Ketik nama barang, mis: F670L" autocomplete="off" required
+                       class="w-full min-w-0 rounded-xl bg-[#08080f] border border-white/[0.08] px-3 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none">
+                <div data-ac-list class="hidden absolute z-20 left-0 right-0 top-full mt-1 rounded-xl bg-[#0d0d14] border border-white/[0.08] shadow-xl overflow-hidden"></div>
+                <div data-ac-empty class="hidden mt-1 text-xs text-amber-400">Tidak ada barang yang cocok. Coba kata kunci lain.</div>
+            </div>
         </div>
         <div class="sm:col-span-5">
             <label class="text-sm font-medium text-zinc-300">Jumlah *</label>
@@ -37,7 +39,7 @@
                    class="mt-2 w-full min-w-0 rounded-xl bg-[#08080f] border border-white/[0.08] px-3 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none">
         </div>
         <div class="sm:col-span-12 -mt-1">
-            <div class="text-xs text-zinc-500" data-info>Sisa stok: <span data-info-stok>-</span> <span data-info-satuan></span></div>
+            <div class="text-xs text-zinc-500" data-info>Sisa stok: <span data-info-stok>{{ $selBarang->stok ?? '-' }}</span> <span data-info-satuan>{{ $selBarang->satuan ?? '' }}</span></div>
         </div>
     </div>
 </div>
